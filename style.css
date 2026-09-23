@@ -1,382 +1,482 @@
 :root {
-  --espresso: #2e1d14;
-  --espresso-2: #4a3222;
-  --cream: #f7f2ea;
-  --cream-2: #fffdf9;
-  --sage: #5f6b45;
-  --sage-light: #ebeee1;
-  --caramel: #b9793a;
-  --text-muted: #8c7a68;
-  --line: #e7dfd2;
-  --radius: 18px;
+  /* Palet Warna ForeGood Artisan Specialty Coffee */
+  --primary-coffee: #4A2B20;
+  --primary-coffee-dark: #381E15;
+  --accent-caramel: #C49A6C;
+  --bg-cream: #FAF6F0;
+  --card-white: #FFFFFF;
+  --text-main: #231815;
+  --text-muted: #8E7C74;
+  --line: #EFE7DF;
+  --radius-card: 16px;
 }
+
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
+
 html,
 body {
   margin: 0;
   padding: 0;
 }
+
 body {
-  background: var(--cream);
+  background-color: var(--bg-cream);
   font-family: "Manrope", sans-serif;
-  color: var(--espresso);
+  color: var(--text-main);
   -webkit-font-smoothing: antialiased;
-  padding-bottom: 48px;
-}
-a {
-  color: inherit;
+  padding-bottom: 40px;
 }
 
-/* ---------- Header ---------- */
+/* ---------- Top Bar / App Bar ForeGood ---------- */
 header.top {
-  background: linear-gradient(
-    160deg,
-    var(--espresso) 0%,
-    var(--espresso-2) 100%
-  );
-  color: var(--cream-2);
-  padding: 34px 20px 40px;
-  border-radius: 0 0 28px 28px;
+  background: var(--primary-coffee);
+  color: #FFFFFF;
+  padding: 22px 18px 24px;
+  box-shadow: 0 4px 12px rgba(74, 43, 32, 0.15);
 }
+
 .brandrow {
   display: flex;
   align-items: center;
-  gap: 14px;
-  max-width: 900px;
+  gap: 12px;
+  max-width: 720px;
   margin: 0 auto;
 }
+
 .brandmark {
-  width: 52px;
-  height: 52px;
-  border-radius: 15px;
-  background: var(--cream-2);
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  overflow: hidden; /* Memotong sisi logo agar mengikuti lengkungan sudut */
+  padding: 2px;
 }
-.brandmark svg {
-  width: 28px;
-  height: 28px;
+
+.brand-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Menjaga proporsi logo toko agar tetap bulat dan presisi */
+  display: block;
 }
+
 .brandtext h1 {
-  font-family: "Fraunces", serif;
-  font-weight: 600;
-  font-size: 1.5rem;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
   margin: 0;
-  letter-spacing: 0.2px;
+  letter-spacing: -0.2px;
+  color: #FFFFFF;
 }
+
 .brandtext p {
   margin: 2px 0 0;
-  font-size: 0.85rem;
-  color: #d8c9b8;
+  font-size: 0.8rem;
+  color: var(--accent-caramel);
   font-weight: 500;
 }
 
-/* ---------- Search + filters ---------- */
+/* ---------- Search Bar ---------- */
 .controls {
-  max-width: 900px;
-  margin: -22px auto 0;
-  padding: 0 20px;
+  max-width: 720px;
+  margin: 14px auto 0;
+  padding: 0 16px;
 }
+
 .searchbar {
-  background: var(--cream-2);
-  border-radius: 16px;
+  background: var(--card-white);
+  border-radius: 28px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 13px 16px;
-  box-shadow: 0 10px 24px rgba(46, 29, 20, 0.12);
+  padding: 10px 18px;
+  box-shadow: 0 2px 8px rgba(74, 43, 32, 0.04);
   border: 1px solid var(--line);
 }
+
 .searchbar svg {
   flex-shrink: 0;
-  color: var(--caramel);
+  color: #9E9E9E;
 }
+
 .searchbar input {
   border: none;
   outline: none;
   background: transparent;
   font-family: "Manrope", sans-serif;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   width: 100%;
-  color: var(--espresso);
-}
-.searchbar input::placeholder {
-  color: #b8a996;
+  color: var(--text-main);
 }
 
+.searchbar input::placeholder {
+  color: #A89B95;
+  font-weight: 400;
+}
+
+/* ---------- Filter Chips Kategori ---------- */
 .pills {
   display: flex;
-  gap: 9px;
+  gap: 8px;
   overflow-x: auto;
-  padding: 18px 20px 4px;
-  max-width: 900px;
+  padding: 14px 16px 6px;
+  max-width: 720px;
   margin: 0 auto;
   scrollbar-width: none;
 }
+
 .pills::-webkit-scrollbar {
   display: none;
 }
+
 .pill {
   flex-shrink: 0;
-  padding: 9px 18px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  background: var(--cream-2);
-  border: 1px solid var(--line);
-  color: var(--espresso-2);
+  padding: 7px 16px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: var(--card-white);
+  border: 1px solid #E0D6CD;
+  color: #5C4A42;
   cursor: pointer;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
+
 .pill.active {
-  background: var(--espresso);
-  border-color: var(--espresso);
-  color: var(--cream-2);
+  background: var(--primary-coffee);
+  border-color: var(--primary-coffee);
+  color: #FFFFFF;
 }
 
-/* ---------- Grid ---------- */
+/* ---------- 2-Column Grid (Sesuai Tampilan Mobile Flutter) ---------- */
 .grid-wrap {
-  max-width: 900px;
-  margin: 8px auto 0;
-  padding: 14px 20px 0;
+  max-width: 720px;
+  margin: 6px auto 0;
+  padding: 8px 16px 0;
 }
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 12px;
 }
-@media (min-width: 620px) {
+
+@media (min-width: 640px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media (min-width: 900px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
   }
 }
 
+/* ---------- Card Styling Persis Flutter UI ---------- */
 .card {
-  background: var(--cream-2);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  background: var(--card-white);
+  border-radius: var(--radius-card);
+  border: 1px solid rgba(224, 214, 205, 0.6);
+  box-shadow: 0 3px 10px rgba(74, 43, 32, 0.05);
   overflow: hidden;
   cursor: pointer;
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
   display: flex;
   flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 14px 28px rgba(46, 29, 20, 0.14);
+
+.card:active {
+  transform: scale(0.98);
 }
-.card:focus-visible {
-  outline: 2px solid var(--sage);
-  outline-offset: 2px;
-}
+
 .card .imgwrap {
   position: relative;
-  aspect-ratio: 1/1;
-  background: var(--sage-light);
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #EFE7DF;
   overflow: hidden;
 }
+
 .card .imgwrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
+
+/* Badge Kategori Melayang di Atas Foto */
 .card .badge {
-  display: inline-block;
-  color: var(--sage);
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #FFFFFF;
   font-size: 0.68rem;
   font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--sage-light);
+  padding: 4px 9px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2;
+  letter-spacing: 0.2px;
 }
+
 .card .info {
-  padding: 12px 13px 14px;
+  padding: 10px 12px 12px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  justify-content: space-between;
   flex: 1;
 }
+
 .card .info h3 {
-  font-family: "Fraunces", serif;
-  font-weight: 600;
-  font-size: 1rem;
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  font-size: 0.88rem;
   margin: 0;
-  line-height: 1.25;
-  color: var(--espresso);
+  line-height: 1.3;
+  color: var(--text-main);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  overflow: hidden;
 }
+
 .card .meta-row {
-  margin-top: auto;
-  padding-top: 6px;
+  margin-top: 6px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: flex-start;
 }
+
 .card .price {
+  font-family: "Manrope", sans-serif;
   font-weight: 800;
-  font-size: 0.95rem;
-  color: var(--caramel);
+  font-size: 0.85rem;
+  color: var(--primary-coffee);
   white-space: nowrap;
 }
 
-/* ---------- Empty / loading states ---------- */
+/* ---------- State Loading / Kosong ---------- */
 .state-msg {
-  grid-column: 1/-1;
+  grid-column: 1 / -1;
   text-align: center;
-  padding: 50px 20px;
+  padding: 60px 20px;
   color: var(--text-muted);
 }
+
 .state-msg h3 {
-  font-family: "Fraunces", serif;
-  color: var(--espresso-2);
-  margin: 10px 0 4px;
-  font-size: 1.1rem;
+  color: var(--primary-coffee);
+  margin: 0 0 6px;
+  font-size: 1rem;
 }
+
 .state-msg p {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
 }
+
 .skel {
-  background: linear-gradient(
-    100deg,
-    var(--sage-light) 30%,
-    #f3efe4 50%,
-    var(--sage-light) 70%
-  );
+  background: linear-gradient(90deg, #f0eae1 25%, #f8f4ee 50%, #f0eae1 75%);
   background-size: 200% 100%;
-  animation: shine 1.3s infinite;
+  animation: shimmer 1.4s infinite;
 }
-@keyframes shine {
-  from {
-    background-position: 120% 0;
-  }
-  to {
-    background-position: -20% 0;
-  }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
+
 .skel-card .imgwrap {
   background: none;
 }
 
-/* ---------- Detail sheet ---------- */
+/* ---------- Bottom Sheet Modal (Detail Sajian Modern) ---------- */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(29, 18, 11, 0.45);
+  background: rgba(35, 24, 21, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: flex-end;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.22s ease;
-  z-index: 50;
+  transition: opacity 0.25s ease;
+  z-index: 100;
 }
+
 .overlay.show {
   opacity: 1;
   pointer-events: auto;
 }
+
 .sheet {
-  background: var(--cream-2);
+  background: #FFFFFF;
   width: 100%;
-  max-width: 520px;
-  border-radius: 24px 24px 0 0;
-  max-height: 88vh;
+  max-width: 480px;
+  border-radius: 28px 28px 0 0;
+  max-height: 86vh;
   overflow-y: auto;
-  transform: translateY(30px);
-  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1);
+  transform: translateY(100%);
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+  box-shadow: 0 -12px 36px rgba(46, 29, 20, 0.16);
+  position: relative;
+  touch-action: pan-y;
+  overscroll-behavior-y: contain;
 }
+
 .overlay.show .sheet {
   transform: translateY(0);
 }
-.sheet .grabber {
-  width: 38px;
-  height: 4px;
-  border-radius: 99px;
-  background: var(--line);
-  margin: 12px auto 0;
+
+/* Area pegangan atas khusus untuk swipe down */
+.sheet-drag-area {
+  padding: 12px 0 8px;
+  display: flex;
+  justify-content: center;
+  cursor: grab;
+  position: sticky;
+  top: 0;
+  background: #FFFFFF;
+  z-index: 5;
 }
+
+.sheet .grabber {
+  width: 42px;
+  height: 5px;
+  border-radius: 10px;
+  background: #D9CEC3;
+  transition: background 0.2s;
+}
+
+.sheet-drag-area:active .grabber {
+  background: var(--accent-caramel);
+}
+
+/* Kotak Gambar & Tombol Close */
+.sheet-imgbox {
+  position: relative;
+  padding: 0 16px;
+}
+
 .sheet .hero {
   width: 100%;
-  aspect-ratio: 4/3;
-  background: var(--sage-light);
+  aspect-ratio: 1 / 1;
+  background: #EFE7DF;
+  border-radius: 20px;
   overflow: hidden;
-  margin-top: 14px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
+
 .sheet .hero img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
 }
-.sheet .body {
-  padding: 20px 22px 30px;
-}
-.sheet .tag {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--sage);
-  background: var(--sage-light);
-  padding: 5px 12px;
-  border-radius: 999px;
-  margin-bottom: 10px;
-}
-.sheet h2 {
-  font-family: "Fraunces", serif;
-  font-weight: 600;
-  font-size: 1.55rem;
-  margin: 0 0 6px;
-  line-height: 1.2;
-}
-.sheet .price {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--caramel);
-  margin-bottom: 14px;
-}
-.sheet .desc {
-  font-size: 0.92rem;
-  line-height: 1.65;
-  color: var(--espresso-2);
-  border-top: 1px solid var(--line);
-  padding-top: 14px;
-}
-.sheet .desc.empty {
-  color: var(--text-muted);
-  font-style: italic;
-}
+
+/* Tombol X Bulat Minimalis */
 .closebtn {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 10px;
+  right: 26px;
   width: 34px;
   height: 34px;
   border-radius: 50%;
   background: rgba(46, 29, 20, 0.55);
-  color: #fff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #FFFFFF;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 10;
+  transition: transform 0.15s, background 0.15s;
 }
-.sheet-imgbox {
-  position: relative;
+
+.closebtn:active {
+  transform: scale(0.9);
+  background: var(--primary-coffee);
+}
+
+/* Isi Konten Detail */
+.sheet .body {
+  padding: 16px 20px 36px;
+}
+
+.sheet-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.sheet .tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--primary-coffee);
+  background: #F1ECE4;
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.sheet h2 {
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  font-size: 1.35rem;
+  margin: 0;
+  line-height: 1.25;
+  color: var(--text-main);
+}
+
+.sheet .price {
+  font-family: "Manrope", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary-coffee);
+  white-space: nowrap;
+}
+
+/* Kotak Keterangan / Deskripsi */
+.sheet-desc-box {
+  background: var(--bg-cream);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-top: 14px;
+}
+
+.sheet-desc-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.sheet .desc {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #4A3A34;
+  margin: 0;
+}
+
+.sheet .desc.empty {
+  color: var(--text-muted);
+  font-style: italic;
 }

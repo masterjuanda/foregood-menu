@@ -80,11 +80,11 @@ function renderGrid() {
     <div class="card" tabindex="0" data-id="${p.id}">
       <div class="imgwrap">
         <img src="${p.gambar_url || ""}" alt="${p.nama}" loading="lazy" onerror="this.style.opacity=0">
+        <span class="badge">${p.kategori?.nama || "Menu"}</span>
       </div>
       <div class="info">
         <h3>${p.nama}</h3>
         <div class="meta-row">
-          <span class="badge">${p.kategori?.nama || "Menu"}</span>
           <span class="price">${formatRupiah(p.harga)}</span>
         </div>
       </div>
@@ -107,32 +107,115 @@ function openDetail(id) {
   if (!p) return;
 
   sheet.innerHTML = `
-    <div class="sheet-imgbox">
+    <div class="sheet-drag-area" id="sheetDragArea">
       <div class="grabber"></div>
+    </div>
+    <div class="sheet-imgbox">
       <button class="closebtn" id="closeBtn" aria-label="Tutup">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <path d="M6 6l12 12M18 6 6 18" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
       </button>
-      <div class="hero"><img src="${p.gambar_url || ""}" alt="${p.nama}" onerror="this.style.opacity=0"></div>
+      <div class="hero">
+        <img src="${p.gambar_url || ""}" alt="${p.nama}" onerror="this.style.opacity=0">
+      </div>
     </div>
     <div class="body">
       <span class="tag">${p.kategori?.nama || "Menu"}</span>
-      <h2>${p.nama}</h2>
-      <div class="price">${formatRupiah(p.harga)}</div>
-      <div class="desc ${p.deskripsi ? "" : "empty"}">${p.deskripsi || "Belum ada deskripsi untuk menu ini."}</div>
+      <div class="sheet-header-row">
+        <h2>${p.nama}</h2>
+        <div class="price">${formatRupiah(p.harga)}</div>
+      </div>
+      <div class="sheet-desc-box">
+        <div class="sheet-desc-title">Tentang Produk Ini</div>
+        <p class="desc ${p.deskripsi ? "" : "empty"}">
+          ${p.deskripsi || "Belum ada catatan racikan atau deskripsi sajian untuk menu ini."}
+        </p>
+      </div>
     </div>
   `;
+
+  // Buka Sheet
   overlay.classList.add("show");
   document.body.style.overflow = "hidden";
+
+  // Reset transisi & posisi
+  sheet.style.transition = "transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1)";
+  sheet.style.transform = "translateY(0)";
+
+  // Tombol X close
   document.getElementById("closeBtn").addEventListener("click", closeDetail);
+
+  // Pasang gesture Swipe Down (Tarik ke Bawah)
+  initSwipeToClose();
 }
 
 function closeDetail() {
+  sheet.style.transition = "transform 0.24s ease";
+  sheet.style.transform = "translateY(100%)";
   overlay.classList.remove("show");
   document.body.style.overflow = "";
 }
+
+// -------------------------------------------------------------------
+// LOGIKA GESTURE SWIPE-DOWN (Tarik dari atas ke bawah untuk menutup)
+// -------------------------------------------------------------------
+function initSwipeToClose() {
+  let startY = 0;
+  let currentY = 0;
+  let isDragging = false;
+
+  const dragArea = document.getElementById("sheetDragArea");
+
+  const onTouchStart = (e) => {
+    // Tarik aktif jika disentuh di area drag atas atau saat scroll sheet sedang di paling atas
+    if (sheet.scrollTop <= 0) {
+      startY = e.touches[0].clientY;
+      isDragging = true;
+      sheet.style.transition = "none"; // Hilangkan delay transisi saat ditarik tangan
+    }
+  };
+
+  const onTouchMove = (e) => {
+    if (!isDragging) return;
+    currentY = e.touches[0].clientY;
+    const deltaY = currentY - startY;
+
+    // Hanya gerakkan jika ditarik ke bawah (positif)
+    if (deltaY > 0) {
+      sheet.style.transform = `translateY(${deltaY}px)`;
+    }
+  };
+
+  const onTouchEnd = (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    const deltaY = currentY - startY;
+
+    // Ambang batas: jika ditarik ke bawah lebih dari 90px, tutup sheet
+    if (deltaY > 90) {
+      closeDetail();
+    } else {
+      // Jika tarikan kurang jauh, kembalikan ke atas dengan mulus
+      sheet.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1)";
+      sheet.style.transform = "translateY(0)";
+    }
+    startY = 0;
+    currentY = 0;
+  };
+
+  // Pasang event ke area grabber dan sheet
+  dragArea.addEventListener("touchstart", onTouchStart, { passive: true });
+  sheet.addEventListener("touchstart", onTouchStart, { passive: true });
+  window.addEventListener("touchmove", onTouchMove, { passive: true });
+  window.addEventListener("touchend", onTouchEnd);
+}
+
+// Menutup ketika area gelap (backdrop) diklik
 overlay.addEventListener("click", (e) => {
   if (e.target === overlay) closeDetail();
 });
+
 
 searchInput.addEventListener("input", (e) => {
   searchQuery = e.target.value;
