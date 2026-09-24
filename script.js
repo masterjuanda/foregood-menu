@@ -36,7 +36,23 @@ function renderSkeleton() {
 }
 
 function renderPills() {
-  const options = ["Semua", ...categories.map((c) => c.nama)];
+  // Urutan patokan disamakan persis dengan nama di Supabase kamu
+  const priorityOrder = ["coffee", "noncoffee", "ice cream", "cemilan"];
+
+  const sortedCategories = categories
+    .map((c) => c.nama)
+    .sort((a, b) => {
+      let indexA = priorityOrder.indexOf(a.toLowerCase());
+      let indexB = priorityOrder.indexOf(b.toLowerCase());
+
+      if (indexA === -1) indexA = 99;
+      if (indexB === -1) indexB = 99;
+
+      return indexA - indexB;
+    });
+
+  const options = ["Semua", ...sortedCategories];
+
   pillRowEl.innerHTML = options
     .map(
       (cat) => `
@@ -44,6 +60,7 @@ function renderPills() {
   `,
     )
     .join("");
+
   pillRowEl.querySelectorAll(".pill").forEach((el) => {
     el.addEventListener("click", () => {
       activeCategory = el.dataset.cat;
