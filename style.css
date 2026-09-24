@@ -137,6 +137,7 @@ header.top {
 }
 
 .pill {
+  text-transform: capitalize;
   flex-shrink: 0;
   padding: 7px 16px;
   border-radius: 20px;
@@ -207,6 +208,7 @@ header.top {
   object-fit: cover;
   display: block;
 }
+
 
 /* Badge Kategori Melayang di Atas Foto */
 .card .badge {
@@ -427,7 +429,7 @@ header.top {
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.4px;
-  text-transform: uppercase;
+  text-transform: none;
   color: var(--primary-coffee);
   background: #F1ECE4;
   padding: 4px 10px;

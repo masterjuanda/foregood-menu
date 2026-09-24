@@ -20,6 +20,17 @@ function formatRupiah(num) {
   return "Rp " + Number(num).toLocaleString("id-ID");
 }
 
+function formatBadgeCategory(cat) {
+  if (!cat) return "Menu";
+  const map = {
+    coffee: "Coffee",
+    noncoffee: "Non Coffee",
+    "ice cream": "Ice Cream",
+    cemilan: "Camilan",
+  };
+  return map[cat.toLowerCase().trim()] || cat;
+}
+
 function renderSkeleton() {
   gridEl.innerHTML = Array.from({ length: 6 })
     .map(
@@ -36,18 +47,15 @@ function renderSkeleton() {
 }
 
 function renderPills() {
-  // Urutan patokan disamakan persis dengan nama di Supabase kamu
   const priorityOrder = ["coffee", "noncoffee", "ice cream", "cemilan"];
 
   const sortedCategories = categories
     .map((c) => c.nama)
     .sort((a, b) => {
-      let indexA = priorityOrder.indexOf(a.toLowerCase());
-      let indexB = priorityOrder.indexOf(b.toLowerCase());
-
+      let indexA = priorityOrder.indexOf(a.toLowerCase().trim());
+      let indexB = priorityOrder.indexOf(b.toLowerCase().trim());
       if (indexA === -1) indexA = 99;
       if (indexB === -1) indexB = 99;
-
       return indexA - indexB;
     });
 
@@ -56,7 +64,9 @@ function renderPills() {
   pillRowEl.innerHTML = options
     .map(
       (cat) => `
-    <div class="pill ${cat === activeCategory ? "active" : ""}" data-cat="${cat}">${cat}</div>
+    <div class="pill ${cat === activeCategory ? "active" : ""}" data-cat="${cat}">
+      ${cat === "Semua" ? cat : formatBadgeCategory(cat)}
+    </div>
   `,
     )
     .join("");
@@ -71,10 +81,11 @@ function renderPills() {
 }
 
 function getFiltered() {
+  const q = searchQuery.toLowerCase().trim();
   return allProducts.filter((p) => {
     const matchCat =
       activeCategory === "Semua" || p.kategori?.nama === activeCategory;
-    const matchQuery = p.nama.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchQuery = !q || p.nama.toLowerCase().includes(q);
     return matchCat && matchQuery;
   });
 }
@@ -97,7 +108,7 @@ function renderGrid() {
     <div class="card" tabindex="0" data-id="${p.id}">
       <div class="imgwrap">
         <img src="${p.gambar_url || ""}" alt="${p.nama}" loading="lazy" onerror="this.style.opacity=0">
-        <span class="badge">${p.kategori?.nama || "Menu"}</span>
+        <span class="badge">${formatBadgeCategory(p.kategori?.nama)}</span>
       </div>
       <div class="info">
         <h3>${p.nama}</h3>
@@ -138,7 +149,7 @@ function openDetail(id) {
       </div>
     </div>
     <div class="body">
-      <span class="tag">${p.kategori?.nama || "Menu"}</span>
+      <span class="tag">${formatBadgeCategory(p.kategori?.nama)}</span>
       <div class="sheet-header-row">
         <h2>${p.nama}</h2>
         <div class="price">${formatRupiah(p.harga)}</div>
@@ -152,19 +163,13 @@ function openDetail(id) {
     </div>
   `;
 
-  // Buka Sheet
   overlay.classList.add("show");
   document.body.style.overflow = "hidden";
 
-  // Reset transisi & posisi
   sheet.style.transition = "transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1)";
   sheet.style.transform = "translateY(0)";
 
-  // Tombol X close
   document.getElementById("closeBtn").addEventListener("click", closeDetail);
-
-  // Pasang gesture Swipe Down (Tarik ke Bawah)
-  initSwipeToClose();
 }
 
 function closeDetail() {
@@ -174,65 +179,53 @@ function closeDetail() {
   document.body.style.overflow = "";
 }
 
-// -------------------------------------------------------------------
-// LOGIKA GESTURE SWIPE-DOWN (Tarik dari atas ke bawah untuk menutup)
-// -------------------------------------------------------------------
-function initSwipeToClose() {
-  let startY = 0;
-  let currentY = 0;
-  let isDragging = false;
+// Pasang gesture swipe down satu kali saja secara global agar tidak menumpuk saat gonta-ganti menu
+let startY = 0;
+let currentY = 0;
+let isDragging = false;
 
-  const dragArea = document.getElementById("sheetDragArea");
-
-  const onTouchStart = (e) => {
-    // Tarik aktif jika disentuh di area drag atas atau saat scroll sheet sedang di paling atas
+sheet.addEventListener(
+  "touchstart",
+  (e) => {
     if (sheet.scrollTop <= 0) {
       startY = e.touches[0].clientY;
       isDragging = true;
-      sheet.style.transition = "none"; // Hilangkan delay transisi saat ditarik tangan
+      sheet.style.transition = "none";
     }
-  };
+  },
+  { passive: true },
+);
 
-  const onTouchMove = (e) => {
+window.addEventListener(
+  "touchmove",
+  (e) => {
     if (!isDragging) return;
     currentY = e.touches[0].clientY;
     const deltaY = currentY - startY;
-
-    // Hanya gerakkan jika ditarik ke bawah (positif)
     if (deltaY > 0) {
       sheet.style.transform = `translateY(${deltaY}px)`;
     }
-  };
+  },
+  { passive: true },
+);
 
-  const onTouchEnd = (e) => {
-    if (!isDragging) return;
-    isDragging = false;
-    const deltaY = currentY - startY;
+window.addEventListener("touchend", () => {
+  if (!isDragging) return;
+  isDragging = false;
+  const deltaY = currentY - startY;
+  if (deltaY > 90) {
+    closeDetail();
+  } else {
+    sheet.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1)";
+    sheet.style.transform = "translateY(0)";
+  }
+  startY = 0;
+  currentY = 0;
+});
 
-    // Ambang batas: jika ditarik ke bawah lebih dari 90px, tutup sheet
-    if (deltaY > 90) {
-      closeDetail();
-    } else {
-      // Jika tarikan kurang jauh, kembalikan ke atas dengan mulus
-      sheet.style.transition = "transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1)";
-      sheet.style.transform = "translateY(0)";
-    }
-    startY = 0;
-    currentY = 0;
-  };
-
-  // Pasang event ke area grabber dan sheet
-  dragArea.addEventListener("touchstart", onTouchStart, { passive: true });
-  sheet.addEventListener("touchstart", onTouchStart, { passive: true });
-  window.addEventListener("touchmove", onTouchMove, { passive: true });
-  window.addEventListener("touchend", onTouchEnd);
-}
-
-// Menutup ketika area gelap (backdrop) diklik
 overlay.addEventListener("click", (e) => {
   if (e.target === overlay) closeDetail();
 });
-
 
 searchInput.addEventListener("input", (e) => {
   searchQuery = e.target.value;
@@ -246,14 +239,15 @@ async function loadData() {
       { data: kategoriData, error: kErr },
       { data: produkData, error: pErr },
     ] = await Promise.all([
-      supa.from("kategori").select("*").order("nama"),
+      supa.from("kategori").select("nama").order("nama"),
       supa
         .from("produk")
         .select(
-          "id, kategori_id, nama, harga, deskripsi, gambar_url, kategori:kategori_id(nama)",
+          "id, nama, harga, deskripsi, gambar_url, kategori:kategori_id(nama)",
         )
         .order("id", { ascending: false }),
     ]);
+
     if (kErr) throw kErr;
     if (pErr) throw pErr;
 
